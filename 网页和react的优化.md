@@ -1,0 +1,38 @@
+- 组件层面上的优化
+  - 列表用key标识
+  - 减少容器组件中props中新建对象，减少内联样式 尽可能的使用纯组件    少用内联函数 箭头函数的调用
+  - 使用reselect库提供的缓存功能
+  - array数据用key表示
+  - 组件重写shouleComponentUpdate方法
+  - 将函数绑定提前到constructor
+
+- reconciler：
+  - 核心的部分，包含 React 中自定义组件的实现 （ReactCompositeComponent）、组件生命周期机制、setState 机制（ReactUpdates、 ReactUpdateQueue）、DOM diff 算法（ReactMultiChild）等重要的特性方法。 
+  - Batch Update 批次更新
+    - 在前端框架中实现 Batch Update 的关键在于两个问题：
+  - Virtual DOM 模型
+    - ReactNode节点分三类：
+      - ReactElement
+        - ReactComponentElement 
+        - ReactDOMElement
+      - ReactFragment 
+      - ReactText
+    - createElement方法： JSX 创建的虚拟元素终会被编译成调用 React createElement方法：
+      - 实际做的三件事：
+        - 将过滤后的有效属性，从 config 拷贝到 props
+        - 将 children 以数组或对象的形式拷贝到 props.children
+        - 默认属性赋值
+    - ReactElement(type ,... ,props) 
+      - copies the type and props as they are to ReactElement and returns the instance.
+    - 调用栈如下：
+      - React.createElement
+      - |=ReactElement.createElement(type, config, children)
+          - |-ReactElement(type,..., props)
+  
+- 深入学习DOM：
+  - 页面的呈现会分以下3个阶段：
+    - JS计算、生成渲染树、绘制页面
+  - DOM的变化类型有4种
+    - 新建删除替代更新
+  - props变化两种
+    - 删除 更新

@@ -1,0 +1,31 @@
+- Symbol:
+  - 在对象的内部，使用 Symbol 值定义属性时，Symbol 值必须放在方括号之中。
+  - symbol.description: 返回symbol(str) str
+  - symbol都是独一无二的`===`都返回false
+  - Symbol 类型还可以用于定义一组常量，保证这组常量的值都是不相等的。
+  - 在遍历对象的属性时，，for of | in, keys... 不会出现。
+  - 但同时也不是私有属性，可通过Object.getOwnPropertySymbols(obj)获得。
+  - 新api：Reflect.ownKeys()可得所有api
+  - Symbol.for()会被登记在全局，但是只产生一个新symbol
+  - symbol的api
+- Number
+  - isFinite、isNAN
+  - parseInt, parseFloat
+  - isInteger：在iEEE765的基础上判断
+  - Number.EPSILON：它表示 1 与大于 1 的最小浮点数之间的差
+- BigInt
+  - BigInt() 要有参数
+  - 与同数值的Number并不===
+  - 除法返回BigInt
+- 函数：
+  - 允许函数设置默认值
+  - 参数变量是默认声明的，所以不能用let或const再次声明。
+  - 参数默认值是惰性求值的，即每次调用foo都会重新计算默认值表达式
+  - 函数的length属性，将返回没有指定默认值的参数个数
+  - 一旦设置了参数的默认值，函数进行声明初始化时，参数会形成一个单独的作用域
+  - 函数...  表示rest参数
+  - name属性
+- let & const:
+  - let的实现方法：
+    - 块作用域上，比如if-else 将let声明的变量转为var，并重命名为_i或_i1
+    - 一些不可预知的创造多少个let变量的情况，使用闭包
