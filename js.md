@@ -468,3 +468,24 @@ js异步：
 ### 装饰者模式：
 - `func.call(context, arg1, arg2…)` —— 用给定的上下文和参数调用 func。
 - `func.apply(context, args)`  调用 func 将 context 作为 this 和类数组的 args 传递给参数列表。
+- 为了改变函数体内this的上下文的内容，
+  ```js
+  Function.prototype.myApply = function(context) {
+    if (typeof this !== 'function') {
+        throw new TypeError('Error')
+    }
+    context = context || this
+    let tmp = Symbol();
+    context[tmp] = this
+    let result
+    // 处理参数和 call 有区别
+    //如果是call用...
+    if (arguments[1]) {
+        result = context[tmp](...arguments[1])
+    } else {
+        result = context[tmp]()
+    }
+    delete context[tmp]
+    return result
+  } 
+  ```
