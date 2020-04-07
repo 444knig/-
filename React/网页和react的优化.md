@@ -3,7 +3,7 @@
   - 减少容器组件中props中新建对象，减少内联样式 尽可能的使用纯组件    少用内联函数 箭头函数的调用
   - 使用reselect库提供的缓存功能
   - array数据用key表示
-  - 组件重写shouleComponentUpdate方法
+  - 组件重写shouleComponentUpdate方法 *xxx*
   - 将函数绑定提前到constructor
 
 - reconciler：
@@ -36,3 +36,13 @@
     - 新建删除替代更新
   - props变化两种
     - 删除 更新
+
+- 懒加载：
+  - 提升用户的体验
+  - 减少无效资源的加载
+  - 防止并发加载的资源过多会阻塞js的加载
+
+- 虚拟化长列表
+- 避免调停
+  - 可以继承 React.PureComponent 以代替手写 shouldComponentUpdate()
+- Immutable 编程：避免浅拷贝带来的scu->false

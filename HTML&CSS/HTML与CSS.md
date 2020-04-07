@@ -19,9 +19,8 @@
    - 块级元素：div ul ol li dl dt dd h1 p
      - 占据其父元素（容器）的整个空间，因此创建了一个“块”
      - 块元素中高度，行高以及顶和底边距都可以控制
-     - 总是在新行上开始 
+     - 总是在新行上开始
      - 宽度默认是它容器的100%
-     - 
    - display:block; (字面意思表现形式设为块级元素); display:inline; (字面意思表现形式设为行内元素)
    - 空元素：`<br> <hr> <link> <meta>`
 5. 页面导入样式时，使用link和@import有什么区别
@@ -188,6 +187,21 @@ BFC：block formatting context
 - 阻止围绕
 - 外边距塌陷
 
+### BFC是什么，如何创建
+- 块级格式化上下文，一个独立的渲染区域，只有Block-level box参与， 它规定了内部的Block-level Box如何布局，并且与这个区域外部毫不相干
+- 创建方法：
+  - 浮动元素（元素的 float 不是 none）
+  - 绝对定位元素（元素的 position 为 absolute 或 fixed）
+  - 行内块元素（元素的 display 为 inline-block、flow-root 、table-cell、table-caption）
+  - overflow 值不为 visible 的块元素
+  - 弹性元素（display为 flex 或 inline-flex元素的直接子元素）
+  - 网格元素（display为 grid 或 inline-grid 元素的直接子元素）
+- 好处：
+  - 清除浮动
+    - 避免坍塌（浮动元素坍塌了）
+    - 阻止文字围绕
+  - 避免外边距重叠
+
 - css 一些标签：
   - overflow：visible 默认 不修剪，呈现在元素框之外
   - hidden：修剪，被剪的不可见
@@ -255,8 +269,213 @@ Flex布局：
 　　　　margin:0 auto;
 　　}
 
-不冒泡的事件：![](img/不冒泡的事件.png)
+不冒泡的事件：![](../img/不冒泡的事件.png)
 
 - css3 选择器：
   - :nth-last-child(n) 或an+b;
-    -  选择器匹配属于其元素的第 N 个子元素的每个元素，不论元素的类型，从最后一个子元素开始计数。
+    - 选择器匹配属于其元素的第 N 个子元素的每个元素，不论元素的类型，从最后一个子元素开始计数。
+
+### css盒模型：
+- 基本概念
+  - Margin：清除边框外的区域，外边距是透明的
+  - Border：围绕在内边距和内容外的边框
+  - Padding：清除内容周围的区域，内边距是透明的
+  - Content：盒子的内容，显示文本和图像
+- box-sizing
+  - content-box，即标准盒模型
+    - width height 都是content，即内容的数值
+  - border-box，则用的是IE盒模型
+    - width = border + padding + 内容的宽度
+    - height = border + padding + 内容的高度
+- 若不声明DOCTYPE类型，IE浏览器会将盒子模型解释为IE盒子模型，FireFox等会将其解释为W3C盒子模型
+- js相关：
+  - JS如何设置获取盒子模型对应的宽和高
+  - dom.style.width/height
+  - dom.currentStyle.width/height  (ie支持)
+  - window.getComputedStyle(dom).width/height;
+  - dom.getBoundingClientRect().width/height;
+
+### css加载顺序：
+- css样式层叠优先级：
+  - 内联样式(style=”) > 内部样式表(`<style>`标签内的样式) > 外部样式表(引入的css文件) > 浏览器缺省 
+  - ID派生选择器(#id h1) > ID选择器(#id) > 
+
+-  文档树中元素的接近度对优先级没有影响。
+-  由于继承而发生样式冲突时，最近祖先获胜。
+-  继承的样式和直接指定的样式冲突时，直接指定的样式获胜
+-  css样式权值![](../img/样式权值.png)
+-  样式权值相同时，后者声明的获胜。
+-  !important的样式属性不被覆盖。
+
+### H5 histrory api
+- History 接口允许操作浏览器的曾经在标签页或者框架里访问的会话历史记录。
+- History.length：一个整数，该整数表示会话历史中元素的数目，包括当前加载的页
+- back forword go pushstate
+
+### 伪类和伪元素：
+**伪类**：用于当已有元素处于的某个状态时(该状态DOM是无法表示的)，为其添加对应的样式，这个状态是根据用户行为而动态变化的
+
+**伪元素**：用于创建一些不在文档树中的元素，并为其添加样式。比如说，我们可以通过:before 来在一个元素前增加一些文本，并为这些文本添加样式。虽然用户可以看到这些文本，但是这些文本实际上不在文档树中。
+
+- 区别：有没有创建一个文档树之外的元素
+
+伪元素是使用单冒号还是双冒号？
+- 伪类使用单冒号 hover 和:active 等伪类使用单冒号 (:)
+- CSS3 规范中的要求使用双冒号 (::) 表示伪元素，以此来区分伪元素和伪类，比如::before 和::after 等伪元素使用双冒号 (::)
+
+### 伪类与伪元素的具体用法
+- ![伪类](../img/伪类.png)
+- ![伪元素](../img/伪元素.png)
+> *某些伪类或伪元素仍然处于试验阶段，在使用前建议先在 Can I Use 等网站查一查其浏览器兼容性。*
+
+**伪类**
+状态
+- a:link(为访问)/hover(悬停)/visited(已访问)/avtive(选择活动)
+- xx:focus(选择获取焦点的输入字段)
+
+结构化：
+- :not ：一个否定伪类，用于匹配不符合参数选择器的元素。
+  - eg：最后一个div `div:not(.xxx){ xxx... }`  class != xxx的都会显示出样式
+  - 最后一个
+- first/last-child:
+  - 匹配最后一个元素
+-  first/last-of-type
+   -  匹配属于其父元素的首个特定类型的子元素的每个元素
+- nth-child/nth-last-child(an+b)
+- nth-last-type/nth-of-type
+- only-child: 当元素是父元素中唯一一个子元素时匹配
+- only-of-type
+
+表单相关：
+- checked
+- default：匹配默认选中的元素，例如：提交按钮总是表单的默认按钮。
+- disabled 匹配禁用的表单元素。`<input type="text" disabled/>`
+- empty 匹配没有子元素的元素，即标签中的内容为空
+- enabled：没有设置disabled的表单元素
+- in-range/out-of-range
+  - html `<input type="number" min="5" max="10">`
+  - css:`input[type=number]:in-range {    border: 5px solid green;}`
+- indeterminate：当某组中的单选框或复选框还没有选取状态时
+- valid/invalid:匹配条件验证正确的表单元素。
+- optional：匹配是具有 optional 属性的表单元素。
+- read-only
+
+语言相关
+- lang
+
+其他
+- :root
+- :fullscreen
+
+### 伪元素
+- ::before/::after
+  - 在被选元素前插入内容。需要使用 content 属性来指定要插入的内容。被插入的内容实际上不在文档树中。
+- ::first-letter
+  - 匹配元素中文本的首字母。被修饰的首字母不在文档树中。
+- ::first-line
+  - 匹配元素中第一行的文本。这个伪元素只能用在块元素中，不能用在内联元素中。
+- ::selection
+  - 匹配用户被用户选中或者处于高亮状态的部分。在火狐浏览器使用时需要添加-moz 前缀。该伪元素只支持双冒号的形式。
+
+#### css选择器：
+head
+- id选择器 #head
+- 类选择器 .head
+- 标签(元素)选择器 div,p  (tag)
+- 相邻选择器  div+p   `选择紧接在 <div> 元素之后的所有 <p> 元素。`
+- 子选择器   div>p    `选择父元素为 <div> 元素的所有 <p> 元素。` 
+- 后代选择器 div p    `选择 <div> 元素内部的所有 <p> 元素。`  (不推荐使用)
+- 通配符选择器  *  选择所有元素。
+- 属性选择器  `[target=_blank]`  选择 target="_blank" 的所有元素。
+- 伪类选择器 a:hover
+
+继承性：
+- 可继承的样式：font-size, font-family, color，ul，li，dl，dt，dd；
+- 不可继承的样式：border, padding, margin, width, height 盒子模型
+- !important > [ id > class > tag ] !important > [ id > class > tag ]
+
+css3 新特性
+- 新增伪类  :not(p) :empty 
+- border： border-radius:50% 是圆角
+- transition
+- flex 布局
+- 多媒体查询
+
+浏览器兼容问题：
+- *{margin:0;padding:0;} 
+
+display:none 与 visibility:hidden 的区别是什么？
+- display : none 隐藏对应的元素，在文档布局中不再分配空间（回流+重绘）
+- visibility:hideen 隐藏对应的元素，在文档布局中仍保留原来的空间（重绘）
+
+清除浮动的方式
+- 最后一个浮动元素后加空 div 标签 并添加样式 clear:both（增加无意义的标签）
+- 包含浮动元素的父标签添加样式 overflow 为 hidden 或 auto。（BFC）
+- 用after伪元素清除浮动（用于非IE浏览器）
+
+CSS预处理器：
+- LESS、Sass、Stylus，用来预编译Sass或less，增强了css代码的复用性，还有层级、mixin、变量、循环、函数等，具有很方便的UI组件模块化开发能力，极大的提高工作效率。
+- 可以在 CSS 中使用变量、简单的逻辑程序、函数（如右侧代码编辑器中就使用了变量$color）等等在编程语言中的一些基本特性，可以让你的 CSS 更加简洁、适应性更强、可读性更佳，更易于代码的维护等诸多好处。
+
+CSS选择器的匹配规则：
+- 从右向左，减少回溯，第一步就能筛选掉很多叶子节点
+
+元素竖向的百分比设定是相对于容器的高度吗
+- 当按百分比设定一个元素的宽度时，它是相对于父容器的宽度计算的
+- 对于一些表示竖向距离的属性，例如 padding-top , padding-bottom , margin-top , margin-bottom 等，当按百分比设定它们时，依据的也是父容器的宽度
+
+display:inline-block 显示间隙和解决方案
+- 因为换行符||空格而引发的间隙
+解决：
+- 不换行
+- 只闭合最后一个
+- 负margin
+
+CSS Sprites：
+- CSS Sprites小图片背景共享技术
+- 它把一堆小的图片整合到一张大的图片上。然后利用CSS的 background-image，background- repeat，background-position 的组合进行背景定位。利用CSS Sprites能很好地减少网页的http请求，从而大大的提高页面的性能；CSS Sprites能减少图片的字节。
+优势
+- 减少网页请求
+- 减少图片的字节；
+- 解决了网页设计师在图片命名上的困扰
+- 更换风格方便，维护方便
+劣势
+- 图片合并时需预留好足够空间，宽屏、高分辨率的屏幕下易出现背景断裂
+- 测量繁琐，维护麻烦
+GPU硬件加速：
+- CSS：will-change:transform
+css3
+- transition：/* property name(margin-/all) | duration | timing function | delay */
+
+**`meta`**
+- 该标签用来展示那些不显示在页面上，但机器能试别的信息
+- 用来丰富页面的描述、关键词、文档的作者、上一次修改和其他metadata
+- metadata：这些元数据用于浏览器（如何布局或重载页面），搜索引擎和其它网络服务。
+
+meta标签共有两个属性，分别是http-equiv属性和name属性
+
+- name属性
+  - name属性主要用于描述网页，比如网页的关键词，叙述等
+  - 与之对应的属性值为content，content中的内容是对name填入类型的具体描述，便于搜索引擎抓取
+  - `<meta name="参数" content="具体的描述">`
+  - name属性的常用参数
+    - application-name，定义正运行在该网页上的网络应用名称，简单的网页不该由该标签定义
+    - keywords(关键字)：用于告诉搜索引擎，你网页的关键字。
+    - description：用于告诉搜索引擎，你网站的主要内容。
+    - viewport：移动端的窗口
+    - robots：定义搜索引擎爬虫的索引方式，告诉爬虫哪些页面需要索引，哪些页面不需要索引
+      - content的参数有all、none、index、noindex、follow、nofollow
+        1. none : 搜索引擎将忽略此网页，等价于noindex，nofollow。
+        2. noindex : 搜索引擎不索引此网页
+        3. nofollow: 搜索引擎不继续通过此网页的链接索引搜索其它的网页。
+        4. 搜索引擎将索引此网页与继续通过此网页的链接索引，等价于index，follow。
+        5. index : 搜索引擎索引此网页
+        6. follow : 搜索引擎继续通过此网页的链接索引搜索其它的网页。 
+    - author
+    - generator：包含生成页面的软件的标识符。
+    - *copyright*：用于标注版权信息
+    - *renderer*：双核浏览器渲染方式
+- http-equiv
+  - "content-security-policy"内容安全策略
+  - refresh
+-  charset="utf-8"：HTML5设定字符集的方式  

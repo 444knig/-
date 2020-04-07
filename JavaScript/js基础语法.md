@@ -101,4 +101,99 @@
        *  未定义变量除了typeof运算符，其余都会运行错误
   * [] 数组的函数：
     * shift unshift indexOf slice[ , )  concat 
+- 对象不可变：
+  - Object.freeze() 方法可以冻结一个对象，并返回被密封后的参数对象，该对象的原型也不能被修改。
+    - 浅冻结
+  - isSeal(): 密封也是浅层属性的密封
+  - Object.isExtensible() 方法判断一个对象是否是可扩展的 浅层
+- for .. in
+- 语法：
+  ```js
+  for (variable in object)
+  statement
+  ```
+  - variable不声明的时候，默认为var
+  - 遍历可枚举属性（包括它的原型链上的可枚举属性）但一般原型链上的属性方法都是不可迭代的
+  - 循环以任意序迭代一个对象的属性
+  - 在一次循环中，关于 delete add：
+    - *If a property is modified in one iteration and then visited at a later time, its value in the loop is its value at that later time*
+    - 一个属性在被访问之前delete，那之后不会再访问到
+    - 循环时添加属性，不一定会被访问
+  - 在迭代过程中最好不要在对象上进行添加、修改或者删除属性的操作，除非是对当前正在被访问的属性
+  - 遍历数组时不要用此方法，因为此方法的次序是依赖于操作系统的
+- for...of
+- ```js
+  for (variable of iterable) {
+  statement
+  }
+  ```
+  - variable不声明的时候，默认为var
+  - 在可迭代对象上创建一个迭代循环，调用自定义迭代钩子，并为每个不同属性的值执行语句
+    - 判断一个对象是否为可迭代的：`obj!==null && typeof obj[Symbol.iterator] === function`
+
+iterator接口  
+- 原生具备 Iterator 接口的数据结构：
+  - Array、Map、Set、String、TypedArray、函数的 arguments 对象、NodeList 对象
+- 普通对象部署该接口没有效果
+
+- 一些调用该接口的场合：
+  - 解构赋值
+    - 对数组和 Set 结构进行解构赋值时，会默认调用Symbol.iterator方法。
+  - 扩展运算符
+  - yield*
+    - yield*后面跟的是一个可遍历的结构，它会调用该结构的遍历器接口。
+  - 其他场合：
+    - for...of
+    - Array.from()
+    - Map(), Set(), WeakMap(), WeakSet()（比如new Map([['a',1],['b',2]])）
+    - Promise.all()
+    - Promise.race()
+
+try-catch-finally
+- 只要有finally，而且代码进入了try-catch块，则必会执行finally的内容
+- 而且finally的return语句会覆盖之前的return
+
+JSON.parse():
+- 接受一个 JSON 字符串并将其转换成一个 JavaScript 对象。
+-  JSON.parse(text[, reviver(k,v)]) 返回值Object类型
+- 提供可选的 reviver 函数用以在返回之前对所得到的对象执行变换(操作)
+  - reviver接受 key value 两个参数，当reviver 返回 undefined，则当前属性会从所属对象中删除
+  - 遍历到最顶层的值（解析值text）时，传入 reviver 函数的参数会是空字符串 ""
+  - 该函数的遍历顺序从最内层开始，按照层级顺序，依次向外遍历
+- JSON.parse() 不允许用逗号作为结尾
+
+JSON.stringify(obj):
+- JSON.stringify() 方法将一个 JavaScript 值（对象或者数组）转换为一个 JSON 字符串
+ 
+- 语法：JSON.stringify(value[, replacer [, space]])
+  - replacer：
+    - 如果该参数是一个函数：被序列化的值的每个属性都会经过该函数的转换和处理
+    - 如果该参数是一个数组，则只有包含在这个数组中的属性名才会被序列化到最终的 JSON 字符串中
+    - 如果该参数为 null 或者未提供，则对象所有的属性都会被序列化
+    - 如果返回 undefined，该属性值不会在 JSON 字符串中输出
+  - space：
+    - 指定缩进用的空白字符串，用于美化输出（pretty-print）
+    - 如果参数是个数字，它代表有多少的空格  `1<x<10`
+- 描述:
+  - 非数组对象的属性不能保证以特定的顺序出现在序列化后的字符串中。
+  - 布尔值、数字、字符串的包装对象在序列化过程中会自动拆包
+  - 在非数组对象的属性值中，undefined、任意的函数以及 symbol 值，在序列化过程中会被忽略；在数组中会被转为null
+  - 对包含循环引用的对象（对象之间相互引用，形成无限循环）执行此方法，会抛出错误。
+  - Date 日期调用了 toJSON() 将其转换为了 string 字符串（同Date.toISOString()），因此会被当做字符串处理。
+  - NaN 和 Infinity 格式的数值及 null 都会被当做 null
+  - 其他类型的对象，包括 Map/Set/WeakMap/WeakSet，仅会**序列化可枚举的属性**。
+- 用处：
+  - 目前所有的浏览器中都会把localStorage的值类型限定为string类型，这个在对我们日常比较常见的JSON对象类型需要一些转换。
+  - localStorage的值只能是string类型
+
+- toJSON 方法
+  - 如果一个被序列化的对象拥有 toJSON 方法，那么该 toJSON 方法就会覆盖该对象默认的序列化行为：不是该对象被序列化，而是调用 toJSON 方法后的返回值会被序列化，例如：
+
+***
+$$Object.prototype$$
+- 属性的值是 null 或 undefined，只要属性存在，hasOwnProperty 依旧会返回 true。
+
+- JavaScript 类数组对象的定义
+  - 可以通过索引访问元素，并且拥有 length 属性；
+  - 没有数组的其他方法，例如 push ， forEach ， indexOf 等。
 

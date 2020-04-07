@@ -270,7 +270,7 @@ var Counter2 = makeCounter();
 ***
   * 用 var 或 let 语句声明的变量，如果没有赋初始值，则其值为 undefined 。
   * 如果访问一个未声明的变量会导致抛出一个引用错误（ReferenceError）异常：
-  * undefined 值在布尔类型环境中会被当作 false 
+  * undefined 值在布尔类型环境中会被当作 false
   * 数值类型环境中 undefined 值会被转换为 NaN
   * 当你对一个 null 变量求值时，空值 null 在数值类型环境中会被当作0来对待，而布尔类型环境中会被当作 false
 * 变量的作用域
@@ -335,140 +335,10 @@ js没有像python一样，解析时识别换行。
 - 定义对象的方法，且该方法内部包括this
 - 需要动态this的时候，也不应使用箭头函数。 addEventListener
 
-js异步：
-- setTimeout：
-    - `let timerId = setTimeout(func|code, [delay], [arg1], [arg2], ...)`
-    - timerId 为计时器的句柄，可用clearTimeout取消调度
-- setInterval：
-    - `let timerId = setInterval(func|code, [delay], [arg1], [arg2], ...)`
-    - timerId同理 clearInterval
-- 异同点：
-  - setTimeout的嵌套可以准确的设置函数的执行间隔，并且可以递归调用，以实现间隔扩大
-  - setInterval：当函数执行时间t < delay时，间隔为delay-t 否则，为t.
-  - 当delay设置为0，几次后delay被强制为4ms
-
-事件循环：
-- 一个在 JavaScript 引擎等待任务、执行任务和休眠等待更多任务这几个状态之间的无穷无尽的循环
-  - 算法：当有任务时->从最先进入的任务开始执行->休眠到有新的任务进入，然后到第 1 步
-- 任务队列就是一个集合，引擎来处理它们，然后等待更多的任务（即休眠，几乎不消耗 CPU 资源）
-  - 任务到来时，引擎可能处于运行状态，那么这个任务就入列，多个任务组成的这个队列就叫做“宏任务队列” 
-  - 先进先出原则
-  - 细节的点：
-    - 引擎处理任务时不会执行渲染。对于 DOM 的修改只有当任务执行完成才会被绘制。
-    - 如果一个任务执行时间过长，浏览器无法处理其他任务，在一定时间后就会在整个页面抛出一个如“页面未响应”的警示建议终止这个任务。
-    - 用例1：基于以上特点，将大任务拆分成小的，利用setTimeout周期性的执行任务
-      - 把耗时任务放在调用setTimeout后能获得优化
-    - 用例2：进度指示器
-      - 因为只有在完成js任务时，才会进行对DOM的修改，因此，利用setTimeout可以展现任务的中间态。
-    - 用例3：在事件之后做一些事情：
-      - 事件处理中我们可能要延期一些行为的执行，直到事件冒泡完成并被所有层级接手和处理之后。我们可以把这部分代码放在 0 延迟的 setTimeout。
-    - 在每个宏任务之后，引擎立即执行所有微任务队列中的任务，比任何其他的宏任务或者渲染或者其他事情都要优先。
-  - 1. 加入微任务，更详细的事件循环的算法：
-      1. 从宏任务队列出列并执行最前面的任务（比如“script”）。
-      2. 出列并运行最前面的微任务
-         1. 执行所有的微任务：
-            1. 当微任务队列非空时：
-      4. 如有需要执行渲染。
-      5. 如果宏任务队列为空，休眠直到一个宏任务出现。
-到步骤 1 中。
-
-- promise:
-  - 在 executor 周围的“隐式 try..catch”自动捕获了 error，并将其变为  rejected promise。
-  - 同样的，当.then处理程序中被throw，一样会被后面的catch reject 
-  - unhandledrejection ：没有被promise catch 的错误
-- 使用finally处理相同的情况;
-  - finally() 方法返回一个Promise。在promise结束时，无论结果是fulfilled或者是rejected，都会执行指定的回调函数
-- Promise.all:
-  - 并行执行多个 promise，并等待所有 promise 都准备就绪。
-  - `let promise = Promise.all([...promises...]);`
-  - 返回的promise也是一个数组，与参数数组的顺序一样
-  - 其中一个 promise 被 reject，Promise.all 就会立即被 reject，完全忽略列表中其他的 promise。它们的结果也被忽略
-  - 通常，Promise.all(...) 接受可迭代对象（iterable）的 promise（大多数情况下是数组）。但是，如果这些对象中的任意一个都不是 promise，那么它将被“按原样”传递给结果数组。
-  - 如果需要知道每一个promise的返回情况：
-    - Promise.allSettled 等待所有的 promise 都被 settle，无论结果如何。结果数组具有：
-      - {status:"fulfilled", value:result} 对于成功的响应，
-      - {status:"rejected", reason:error} 对于 error。
-    - allSettled的polyfill：
-     ```js
-      if(!Promise.allSettled) {
-      Promise.allSettled = function(promises) {
-          return Promise.all(promises.map(p => Promise.resolve(p).then(value => ({
-          state: 'fulfilled',
-          value
-        }), reason => ({
-          state: 'rejected',
-          reason
-        }))));
-      };
-    }
-    ```
-  - promise.race
-    - 等待第一个 settled 的 promise 并获取其结果（或 error）
-  - `Promise.resolve(value)` – 使用给定 value 创建一个 resolved 的 promise。
-  - `Promise.reject(error)` – 使用给定 error 创建一个 rejected 的 promise。
-  
-### Promisification
-- 将一个接受回调的函数转换为一个返回 promise 的函数。
-  ```js 代码例子：
-  function promisify(f) {
-    return function (...args) { // 返回一个包装函数（wrapper-function）
-        return new Promise((resolve, reject) => {
-            args.push((err, result)=>{
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(result);
-                }
-            }); // 将我们的自定义的回调附加到 f 参数（arguments）的末尾
-
-            f.call(this, ...args); // 调用原始的函数
-        });
-    };
-  };
-
-  function loadScript(src, callback) {
-    //这个callback就是promisify中处理reject和resolve的内容
-      let script = document.createElement('script');
-      script.src = src;
-      //resolve 之后执行then
-      script.onload = () => callback(null, script);
-      script.onerror = () => callback(new Error(`Script load error for ${src}`));
-
-      document.head.append(script);
-  }
-
-  let loadScriptPromise = promisify(loadScript);
-  loadScriptPromise("first").then(()=>{});
-  ```
-
-### Async/await
-**async** 
-- 放置在函数前：这个函数总是返回一个 promise。其他值将自动被包装在一个 resolved 的 promise 中。当然也可以显示返回一个`Promise.resolve(1);`。这与结果没什么区别
-- *总的来说：async 确保了函数返回一个 promise，也会将非 promise 的值包装进去*
-**await**
-- await 字面的意思就是让 JavaScript 引擎等待直到 promise settle，然后以 promise 的结果继续执行
-  ```js 相比与then，这样的写法更加优雅
-  async function f() {
-
-    let promise = new Promise((resolve, reject) => {
-        setTimeout(() => resolve("done!"), 1000)
-    });
-
-    let result = await promise; // 等待，直到 promise resolve (*)
-
-    console.log(result) // "done!"
-  }
-  ```  
-  - await 允许修室thenable对象
-  - await all([...])
-  - await的结果：
-    - 如果有 error，就会抛出异常 — 就像那里调用了 throw error 一样。
-    - 否则，就返回结果。
 
 ### 装饰者模式：
 - `func.call(context, arg1, arg2…)` —— 用给定的上下文和参数调用 func。
 - `func.apply(context, args)`  调用 func 将 context 作为 this 和类数组的 args 传递给参数列表。
-- bind: 不立即调用，注意this的指向，可以构造偏函数
 - 为了改变函数体内this的上下文的内容，
   ```js
   Function.prototype.myApply = function(context) {
@@ -480,9 +350,9 @@ js异步：
     context[tmp] = this
     let result
     // 处理参数和 call 有区别
-    //如果是call用...
+    //如果是call用...slice.call(arguments,1) ...
     if (arguments[1]) {
-        result = context[tmp](...arguments[1])
+        result = context[tmp](arguments[1])
     } else {
         result = context[tmp]()
     }
@@ -490,3 +360,135 @@ js异步：
     return result
   } 
   ```
+
+- bind:
+  - 实现要点：
+  - bind是Functoin原型链中Function.prototype的一个属性
+
+- typeof null === 'object'
+- JavaScript 中的值是由一个表示类型的标签和实际数据值表示的。对象的类型标签是 0。由于 null 代表的是空 指针（大多数平台下值为 0x00），因此，null 的类型标签是 0，typeof null 也因此返回 "object"。\
+  - 第一版本JavaScript：
+    - 数据32位存储，包括一个small type tag 1-3bits
+      - 000: object: 数据是指向对象的引用
+      - 1  : 31位的符号型整数
+      - 010: 一个浮点数的引用
+      - 100：字符串引用
+      - 110：值为布尔值
+    - undefined (JSVAL_VOID)：integer −230(JSVAL_VOID) 超出了整型类型范围的一个数.
+    - null：was the machine code NULL pointer
+  - 判断数据类型的流程：
+    1. 比较v===JSVAL_VOID
+    2. 判断值是否为对象，如果是callable或者内部属性`[[Class]] `标志其为function；否则，其为对象
+    3. 判断是否为number，string，布尔
+    4. 竟然忘记了判断是否为null!
+
+- typeof 返回字符串
+
+- eval() 函数:
+  - 将传入的字符串当做 JavaScript 代码进行执行
+    - 返回字符串中代码的返回值。如果返回值为空，则返回 undefined
+  - 如果 eval() 的参数不是字符串， eval() 会将参数原封不动地返回
+- 不要使用eval
+  - 它使用与调用者相同的权限执行代码！危险
+  - 通常比其他替代方法更慢，因为它必须调用 JS 解释器，许多其他结构可以被现代js引擎优化
+  - 现代JavaScript解释器将javascript转换为机器代码。 这意味着任何变量命名的概念都会被删除。 因此，任意一个eval的使用都会强制浏览器进行 *where the variable exists in the machine code and set its value*
+    - 在没有eval的函数中，the object is being evaluated in the global scope, more fast
+  - 如果要嵌套使用eval，可以用
+- if(expression) expression的计算会使用eval表达式
+  - 也就是说，当expreesion有返回值时，则if(ret)  比如赋值表达式，函数等
+  - 当是一个声明表达式function时，let 和 var会报错，此时按照Boolean转换原则计算
+
+### js的数值类型：
+- 基本类型是immutable，不可加属性
+  - 通过value比较
+- 非基本类型都是对象，可变的
+  - 通过引用进行比较
+- 包装，每个基本类型都有其相应的包装类。
+  - 它们是对象
+  - 包装类很少直接使用，但他们的prototype对象定义了许多方法，这些方法能被基本类型直接使用
+- 内部属性：
+  - 不能直接获取，但影响着工作方式的对象
+  - 以大写字母开头，以`[[]]`形式包围
+    - eg. `[[Extensible]]`：标志这个对象的属性能否被扩展(加入)
+      - Object.isExtensible():读
+      - Object.preventExtensions()：写 置false，无回头路
+  - prototypes versus prototype objects
+    - 每一个obj都有一个内部属性`[[Prototype]]` 指向它的原型或null
+    - 如果一个type是被constructor foo，这个constructor的prototype保存的内容也就是type’s prototype object.
+  - prototypes的几个api
+    - Object.getPrototypeOf(obj) returns the prototype of obj:
+      - `Object.getPrototypeOf({}) === Object.prototype` true
+    - Object.create(proto) creates an empty object whose prototype is proto
+      - Object.create(Object.prototype) //{}
+    - proto.isPrototypeOf(obj) returns true if proto is a prototype of obj 或原型链上的对象
+  - The property “constructor”
+    - Foo.prototype.constructor===Foo ，这个属性是在函数创建时被自动生成的
+    - 因为每一个由construrtor创建的对象都会继承指向prototype对象的属性，因此能用obj.constructor是否指向Foo能判断此对象是谁的实例
+- Categorizing values（用来分类的值）four ways
+  - `[[Class]]` 是一个用string来标识是否为Object的属性
+  - typeof可以分类基本类型和判断是否为object
+  - instanceof 分类object 的方法
+  - Array.isArray() 判断是否为数组的方法
+-  `[[Class]]`
+  -  一个内部属性，返回值为：
+  -  `"Arguments", "Array", "Boolean", "Date", "Error", "Function", "JSON", "Math", "Number", "Object", "RegExp", "String"`
+  -  只有一种方法获取`Object.prototype.toString().`，使用继承的方法：返回结果如下：
+    -  "[object Undefined]" if this is undefined,
+    -  "[object Null]" if this is null
+    -  `"[object " + obj.[[Class]] + "]"` if this is an object obj.
+    -  基本类型会转为一个对象，然后遵循上述规则
+  - 因此可以用正则表达式获取这些值
+- type of
+  - 返回string 返回规则如图：![](../img/返回类型.png)
+- instanceof()
+  - value instanceof Type:
+  - 这个运算符可以查看type的类型，检查它是否在value的原型链中
+  - 对于基本类型会自动返回false
+- Array.isArray()
+  -  uses `[[Class]]` to determine whether a value is an array.
+- Object.prototype 
+  - 没有enumerable 的属性
+  - 它是一个object，但并不是object的实例(因为避免循环)，但typeof或`[[Class]]`是一个对象，
+- Function.prototype
+  - 是个函数，返回值是undefined
+  - 同样是一个函数，但并不是函数的实例，这是因为它的prototype为Object.prototype
+- RegExp.prototype
+
+### instanceof 和 isPrototypeOf()的区别：
+A `instanceof` B 判断B的`[[prototype]]`是否在A的原型链上
+B `isPrototypeOf` A 判断B是否在A的原型链上
+箭头函数不能作为构造函数
+
+### delete
+- 用于删除对象的某个属性；delete操作只会在自身的属性上起作用
+  - 任何使用 var 和任何用 let 或 const 声明的属性不能从全局作用域或函数的作用域中删除
+  - 在对象(object)中的函数是能够用delete操作删除的。
+  - 所有情况都是true，除非属性是一个自己不可配置的属性，在这种情况下，非严格模式返回 false。
+
+### this
+```js
+var obj = {
+  foo: function(){
+    console.log(this)
+  }
+}
+
+var bar = obj.foo
+obj.foo() // 打印出的 this 是 obj
+bar() // 打印出的 this 是 window
+```
+- js函数调用有3种形式：
+  - func(p1, p2) 
+  - obj.child.method(p1, p2)
+  - func.call(context, p1, p2) 
+- 实际上，前两种是第三种的语法糖
+  - obj.child.method.call(obj,pa,p2);
+  - 数组调foos[0]()也可以转换为foo.0.call(foo);
+- 箭头函数内没有所谓的this，外面的this是什么，箭头函数的this就是什么
+  
+new 关键词的实现：
+```js
+
+```
+
+
