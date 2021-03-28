@@ -22,7 +22,7 @@ $$context$$
 **Context.Provider**
 - 每个 Context 对象都会返回一个 Provider React 组件，它允许消费组件订阅 context 的变化
 - Provider是需要使用Context的所有组件的根组件。
-- Provider 接收**一个** value 属性，传递给消费组件。一个 Provider 可以和多个消费组件有对应关系。多个 Provider 也可以嵌套使用，里层的会覆盖外层的数据。
+- Provider 接收**一个**value 属性，传递给消费组件。一个 Provider 可以和多个消费组件有对应关系。多个 Provider 也可以嵌套使用，里层的会覆盖外层的数据。
 - 它表示Context传递的值，它会修改你在创建Context时候设定的默认值。
 - 当 Provider 的 value 值发生变化时，它内部的所有消费组件都会重新渲染。
   - **Provider 及其内部 consumer 组件都不受制于 shouldComponentUpdate 函数**
@@ -39,7 +39,7 @@ $$context$$
   {value => /* 基于 context 值进行渲染*/}
   </MyContext.Consumer>
   ```
-- 当Consumer 被放在一个没有 Provider 包裹的树上时，会收到默认值
+- 当 Consumer 被放在一个没有 Provider 包裹的树上时，会收到默认值
 - 可以将consumer当作一个HOC，不必每次都为需要上下文的组件提供consumer
 
 **Context.displayName**

@@ -126,7 +126,7 @@ $$Hook$$
     }, []); // 空数组代表无论什么情况下该函数都不会发生改变
     return <SomeComponent onClick={memoizedHandleClick}>Click Me</SomeComponent>;
   }
-  ``` 
+  ```
 - useCallback 不会执行第一个参数函数，而是将它返回，而 useMemo 会执行第一个函数并且将函数执行结果返回
 -  useCallback 常用记忆事件函数，生成记忆后的事件函数并传递给子组件使用。而 useMemo 更适合经过函数计算得到一个确定的值，比如记忆组件
  

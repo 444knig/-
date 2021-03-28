@@ -53,7 +53,7 @@ CSS性能优化的8个技巧
    - z-index：只对指定了 positioned属性的元素有效。
      - 浏览器有可能给复合层之后的所有相对或绝对定位的元素都创建一个复合层来渲染
      - *Element has a sibling with a lower z-index which has a compositing layer (in other words the it’s rendered on top of a composited layer)* the element will be put on conposited layer
-     - 用认为的z-index提升他的复合层
+     - 用人为的z-index提升他的复合层
 - 不要使用@import：
   - 使用@import引入CSS会影响浏览器的并行下载，@import只有在被解析到该条语句后才会被请求和reflow
   - 多个@import会导致下载顺序紊乱

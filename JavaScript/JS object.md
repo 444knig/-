@@ -1,6 +1,5 @@
 对象属性 vs 访问器属性
 
-
 对象标志
 四个属性：
 - value
@@ -44,10 +43,10 @@ configurable —— 与数据属性的相同。
 
 js Object：
 枚举一个对象的所有属性：
-- for...in 循环
+- for...in 循环   for of 循环的是value，作用对象一般是数组
   - 包括原型，可枚举的属性
 - Object.keys(o)
-  - 不包含原型，可枚举
+  - 不包含原型、可枚举
 - Object.getOwnPropertyNames(o)
   - 不包含原型，包含不可枚举，属性名的数组
 
@@ -57,10 +56,10 @@ Object.prototype.hasOwnProperty()：
 Object.prototype.isPrototypeOf()
 - 测试一个对象是否存在于另一个对象的原型链上。针对此对象的prototype进行检查
 
-Object.assign()：
+Object.assign(target, ...sources)：
 - 用于将所有可枚举属性的值从一个或多个源对象复制到目标对象
 
-Object.defineProperty()
+Object.defineProperty(obj, prop)
 
 Object.defineProperties(obj, props)：
 - 直接在一个对象上定义新的属性或修改现有属性 {name:{},name2:{}};
@@ -84,7 +83,7 @@ Object.entries()
 Object.fromEntries(iterable)
 - 把键值对列表转换为一个对象。
 
-Object.getPrototypeOf(object) 
+Object.getPrototypeOf(object)
 - 方法返回指定对象的原型（内部`[[Prototype]]`属性的值）
 
 Object.create(p)：
@@ -97,5 +96,5 @@ Object.freeze()
 
 Object.is() 与 === 与 == 的对比:
 - ==会做隐式的类型转换
-- ===：将+0和-0视为相等，且认为Number.NAN===Number.NAN;
-- 正常的相等。。
+- ===：将+0和-0视为相等，且认为Number.NAN!==Number.NAN;
+- Object.is():正常的相等。。

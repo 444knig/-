@@ -90,7 +90,7 @@ document.querySelector("#p")-> 找到第一个`id = 'p'` 元素
 - defer详解：
   - defer 属性告诉浏览器它应该继续处理页面，并在“后台”下载脚本，然后等页面处理完成后才开始执行此脚本。
   - 具有 defer 属性的脚本总是要等到 DOM 解析完毕，但在 DOMContentLoaded 事件之前执行。
-  - Defer 脚本保持他们的相对顺序，就像常规脚本一样
+  - defer 脚本保持他们的相对顺序，就像常规脚本一样
   - defer 属性仅适用于外部脚本
 - async
   - 脚本是完全独立的

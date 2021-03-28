@@ -70,7 +70,7 @@ F.prototype.constructor = F
 只要不将F.prototype覆盖，就能保证 f.constructor指向创建它的构造函数
 - F.prototype 在子类实例之后被覆盖，不会影响子类的内容，因为子类的内容通过_proto_获取
 - 但改变F.prototype 引用，会改变子类的内容
-- delete只会作用到对象，不会随着继承链往上传，若删除构造函数prototype的内容，会影响子类编程undefined
+- delete只会作用到对象，不会随着继承链往上传，若删除构造函数prototype的内容，会影响子类变成undefined
 
 - 字面量的创建过程：
   -  ={} => = new Obejct()   
@@ -107,7 +107,7 @@ F.prototype.constructor = F
       - 类可以在另外一个表达式中被定义，被传递，被返回，被赋值  `let User = class {}`
       - 可以动态地“按需”创建类
     - class的属性是创建在对象中的
-  - extent关键字的实现：![继承图](img/继承.png)
+  - extent关键字的实现：![继承图](../img/继承.png)
     - 在 extends 后允许任意表达式
         ```js
         function f(phrase) {
@@ -192,7 +192,7 @@ $$ 正文开始 $$
 
 ### 继承：
 *ECMAScript只支持实现继承，而且其实现继承主要是依靠原型链来实现的*
-- 原型链 ：较少使用
+- 原型链：较少使用
   - 基本思想是利用原型让一个引用类型继承另一个引用类型的属性和方法
   - 核心思想：让原型对象等于另一个类型的实例
     - 此时的原型对象将包含一个指向另一个原型的指针，相应地，另一个原型中也包含着一个指向另一个构造函数的指针
@@ -220,7 +220,7 @@ $$ 正文开始 $$
   - 可传参：
     - 在调用超类型构造函数后，再添加应该在子类型中 定义的属性
   - 问题：
-    - 函数复用就无从谈起
+    - 函数复用就无从谈起，`SuperType.call(this);`这句话只是把相关属性附上去了
     - 即使拥有Super类的属性，但是是new的sub的构造函数，也无法获得超类型的原型方法
 
 - 组合类型：
@@ -232,6 +232,25 @@ $$ 正文开始 $$
     - 将原型的构造函数改为sub
   - 避免了原型链和借用构造函数的缺陷，融合了它们的优点，用instanceof 和 isPrototypeOf()也能够用于识别基于组合继承创建的对象
   - 调用了两次构造函数，对于父类的属性，获得了两份，第一次设置prototype时有了一份，第二次调用父类构造函数时又创造了一份。
+
+```js
+function SuperType(name){
+ this.name = name;
+ this.colors = ["red", "blue", "green"];
+}
+SuperType.prototype.sayName = function(){
+ alert(this.name); 
+};
+function SubType(name, age){
+ //继承属性
+ SuperType.call(this, name);
+
+ this.age = age;
+}
+ 
+SubType.prototype = new SuperType();
+SubType.prototype.constructor = SubType
+```
 
 - 原型式继承
   - 借助原型可以基于已有的对象创建新对象，同时还不必因此创建自定义类型
@@ -268,6 +287,11 @@ $$ 正文开始 $$
   ```
   - 我们需要的只是一个父类的原型的副本，因此只需要用原型式继承得到一个副本即可。与组合型少调用了一次构造函数
   - 有了父类的原型后，在子类的构造函数中调用父类的构造函数就可以得到父类的属性。！
+
+简单对比寄生组合式继承和组合继承：
+- 组合继承能做到父子各拥有一个同名方法，寄生组合式 父子类共享同一个prototype，无法做到，并且此时的父类的prototype指向子类的constructor
+- 但是少调用了一次new方法，效率更高
+
 
 
 1. 凡是通过 new Function() 创建的对象都是函数对象，其他的都是普通对象

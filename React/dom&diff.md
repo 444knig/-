@@ -103,7 +103,7 @@
     - 调用标准DOM API来更改元素的属性（而不是删除节点重建）、
   - 场景3：type已更改为不同的String或从String组件。
     - 会直接将它以及其所有子节点替换，不会采取更新的方法
-    - **React使用===来比较type的值**
+    - **React使用Object.is()来比较type的值**
   - 场景4：type是一个component。
     - React会持续地去检查组件的内部逻辑，以确保render返回的值不会改变（类似对副作用的预防措施）。对树中的每个组件进行遍历和扫描，if type is reference and we started reconciliation process
   - 当子节点是个数组，用key去优化

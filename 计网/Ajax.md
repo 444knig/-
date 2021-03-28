@@ -66,7 +66,7 @@ $$Ajax$$
   - 用来重写response的content-type，可以“改变”xhr.response的类型
   - 实例：转化二进制文件(https://segmentfault.com/a/1190000004322487)
 - xhr.responseType
-  - 接受对象和兼容性: ![](../../img/ajax的兼容性问题.png)
+  - 接受对象和兼容性: ![](../img/ajax的兼容性问题.png)
   - 要在state===1时设置即可
 
 ### 如何获取response数据

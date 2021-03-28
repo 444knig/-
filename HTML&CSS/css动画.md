@@ -41,14 +41,14 @@ transform-origin：
 过渡事件：
 - transitionstart   开始
 - transitioncancel  被取消
-- transitionend      已完成
+- transitionend     已完成
 - transitionrun     开始，即delay过后
 
 **animation**
 语法： animation-name | during | time function | delay | time | direction | play-state
 - animation-name:规定 @keyframes 动画的名称
 - animation-duration：规定动画完成一个周期所花费的秒或毫秒
-- animation-timing-function：规定动画的速度曲线	
+- animation-timing-function：规定动画的速度曲线
 - animation-delay：规定动画何时开始
 - animation-iteration-count：规定动画被播放的次数
 - animation-direction：规定动画是否在下一周期逆向地播放
